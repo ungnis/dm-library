@@ -1,0 +1,21 @@
+#!/bin/sh
+
+word=$(printf '' | dmenu -p 'Search: ' | \
+       sed -e 's/ /%20/g')
+
+choice=$(cat ~/.config/library | \
+        sort -g | \
+        dmenu -i -l 20 -p 'Library: ' "$@")
+
+if [ "$choice" = "" ]; then
+    choice=$(cat ~/.config/library)
+fi
+
+if [ "$word" ]; then
+    ${BROWSER} \
+    $(for site in $choice; do
+        printf '%s\n' "$site$word"
+    done)
+else
+    echo "Program terminated." && exit 0
+fi
